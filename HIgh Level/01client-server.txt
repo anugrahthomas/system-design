@@ -1,0 +1,89 @@
+HIGH LEVEL SYSTEM DESIGN
+- it is a process of designing the architecture of system to meet specific requirements
+- invloves making high-level decisions about the structure and behavior of the system
+
+
+Client-Server Architecture ->
+- a request-response model
+- client: initiates requests
+- server: processes requests and sends responses
+client and server are relative terms, like a browser as a client and app server as a server, whereas app server is client and database server as a server in one scenario.
+
+Networking -> OSI/TCP-IP Model
+- Transport Layer: data delivery(small data chunks), TCP/UDP
+- Application Layer: service to application
+
+TCP{Transmission Control Protocol} (reliable but slower than UDP)
+- connection-oriented protocol
+- reliable data transfer
+- three-way handshake
+- flow control
+- congestion control
+
+UDP{User Datagram Protocol} (faster than TCP)
+- connectionless protocol
+- unreliable data transfer
+
+udp is faster than tcp because it does not have the overhead of connection establishment(3way handshake), error checking, and flow control.
+
+working of TCP:
+1. connection establishment: three-way handshake(SYN, SYN-ACK, ACK)
+2. data transfer: data is sent in segments, each segment has a sequence number, receiver sends an acknowledgment(ACK) for received segments, if sender does not receive ACK within a timeout period, it retransmits the segment
+3. connection termination: four-way handshake(FIN, ACK, FIN, ACK)
+
+TCP vs UDP:
+- TCP is connection-oriented, UDP is connectionless
+- TCP is reliable, UDP is unreliable
+- TCP is slower, UDP is faster
+- TCP does not support multicast, UDP supports multicast
+
+DNS{Domain Name System}:
+- translates domain names to IP addresses
+- hierarchical and decentralized naming system
+- components: DNS resolver, root name server, TLD name server, authoritative name server
+- process: user types URL -> DNS resolver queries root name server -> TLD name server -> authoritative name server -> returns IP address to resolver -> resolver returns IP address to user
+NOTE: however DNS needs reliable transport, but it uses UDP for queries because of its low latency, and it can switch to TCP if the response data size exceeds 512 bytes or for zone transfers.
+
+TLS{Transport Layer Security}:
+- cryptographic protocol for secure communication over a network
+- provides confidentiality, integrity, and authentication(CIA)
+- it is the successor of SSL(Secure Sockets Layer)
+- process: client sends a "ClientHello" message to the server, server responds with a "ServerHello" message, server sends its digital certificate, client verifies the certificate, client and server exchange keys, secure communication begins
+
+HTTP{Hypertext Transfer Protocol}:
+- application layer protocol for distributed, collaborative, hypermedia information systems
+- request-response protocol
+- stateless protocol
+- methods: GET, POST, PUT, DELETE, etc.
+- status codes: 200 OK, 404 Not Found, 500 Internal Server Error, etc.
+- works on top of TCP HTTP1.1 and HTTP/2, but can also work on top of UDP with HTTP/3 (QUIC protocol)
+
+HTTP METHODS:
+- GET: retrieve data from the server
+- POST: send data to the server
+- PUT: update data on the server
+- PATCH: partially update data on the server
+- DELETE: delete data from the server
+
+PUT Vs POST:
+- PUT is idempotent, meaning that multiple identical requests will have the same effect as a single request, while POST is not idempotent, meaning that multiple identical requests may have different effects
+- PUT is used to update a resource, while POST is used to create a new resource
+
+
+HTTP HEADERS:
+- these are key-value pairs sent in the HTTP request and response messages
+- used to provide additional information about the request or response
+- examples: Content-Type, Content-Length, Authorization, User-Agent, etc.
+
+HTTPS:
+- HTTP over TLS/SSL
+- provides secure communication over the internet
+- uses port 443 by default
+- encrypts data transmitted between client and server
+
+Encyrption:
+- symmetric encryption: same key for encryption and decryption (e.g., AES)
+- asymmetric encryption: different keys for encryption and decryption (e.g., RSA)
+- hashing: one-way function that converts input data into a fixed-size string of characters (e.g., SHA-256)
+- private key: used for decryption and signing
+- public key: used for encryption and verification
