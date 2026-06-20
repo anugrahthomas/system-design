@@ -1,0 +1,85 @@
+Why Realtime Communication?
+- apps which require fast/immediate communication
+- examples: online gaming, video conferencing, live streaming, chat applications
+
+Challenges of Realtime Communication:
+- latency: the time it takes for a message to travel from sender to receiver
+- jitter: the variation in latency over time
+- packet loss: when packets of data are lost during transmission
+- bandwidth: the amount of data that can be transmitted in a given time period
+
+Solutions:
+1. polling: way to check for new data at regular intervals, but can be inefficient and lead to high latency
+types: long polling, short polling
+
+🧩 Short Polling: asking for data at regular intervals, wether it is available or not
+👉 Analogy: Asking food for every 5 min, even if ready or not
+Pseudo code for short polling:
+function requestData() {
+    response = sendRequestToServer(method, url)
+    if(response.status == 200) {
+        processData(response.data)
+    }else {
+        handleError(response.error)
+    }
+}
+
+function shortPolling() {
+    loop() {
+        requestData()
+        wait(small interval)
+    }
+}
+
+☢️ Disadvantages of short polling:
+- can lead to high latency if the interval is too long
+- can lead to unnecessary network traffic if the interval is too short
+- not practical realtime communication
+-- biggest problem is http uses TCP which is connection-oriented and has overhead of connection establishment and teardown, which adds to latency
+- to avoid this long polling comes into picture
+
+🧩 Long Polling: ask for data one-time and wait in room until it is not avaliable
+👉 Analogy: At restau, give order and wait for food
+Advantages of long polling:
+- reduces latency compared to short polling, as server can respond immediately when data is available
+- reduces unnecessary network traffic, as client only sends a request when it is ready to receive data
+
+Pseudo code for long polling:
+function longPolling() {
+    response = sendRequestToServer(method, url)
+    if(response.status == 200) {
+        processData(response.data)
+        longPolling() // immediately send a new request after receiving data
+    }else if(response.status == 204) { // no content, keep waiting
+        longPolling() // send a new request to keep waiting
+    }else {
+        handleError(response.error)
+    }
+    longPolling() // send a new request to keep waiting 
+}
+
+☢️ Disadvantages of long polling:
+- not efficient for high-frequency updates, resource wastage
+- worst case - long holding connection leads to server resource exhaustion
+-- long polling is better than short polling for realtime communication, but it still has limitations, such as increased latency and resource usage on the server side.
+- after every response, client needs to send a new request to server, which adds to latency because works on HTTP which is based on TCP
+- this problem is solved by WebSockets
+
+3. WebSockets: a full-duplex communication protocol allows real-time communication
+- no request-response on each message
+- works on top of TCP, but has lower latency than HTTP
+Working of WebSockets:
+i. http request from client to server with "Upgrade: websocket" header
+ii. server responds with "101 Switching Protocols" if it supports WebSockets
+iii. connection uses ping-pong mechanism to keep connection alive
+iv. fully realtime because of persistent connection and low latency
+- connection switch from HTTP to ws
+
+SSE (Server-Sent Events): a unidirectional communication protocol allows server to push updates to client
+- works on top of HTTP, but has lower latency than traditional HTTP requests
+Working of SSE:
+i. client sends an HTTP request to server with "Accept: text/event-stream" header
+ii. server responds with "Content-Type: text/event-stream" and keeps the connection open
+iii. server sends updates to client as they become available, using a simple text-based format
+
+WebHook: it is a way for one service to send real-time data to another service over the web, it is a user-defined HTTP callback that is triggered by a specific event, allowing for real-time communication between services without the need for polling.
