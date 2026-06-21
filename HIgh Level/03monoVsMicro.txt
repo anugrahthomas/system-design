@@ -1,0 +1,47 @@
+Monolithic vs Microservices
+
+Monolithic architecture is a traditional software design approach where all components of an application are tightly integrated and run as a single unit. In contrast, microservices architecture is a modern approach that breaks down an application into smaller, independent services that can be developed, deployed, and scaled independently.
+
+Advantages of Monolithic Architecture:
+- Simplicity: Monolithic applications are easier to develop and deploy as they consist of a single codebase and a single deployment unit.
+- Performance: Monolithic applications can be faster as they do not require inter-service communication, which can introduce latency.
+- Easier to test: Monolithic applications can be easier to test as all components are in the same codebase and can be tested together
+
+Disadvantages of Monolithic Architecture:
+- Scalability: Monolithic applications can be difficult to scale as all components are tightly integrated and must be scaled together, which can lead to resource inefficiency.
+- Maintenance: Monolithic applications can be difficult to maintain as the codebase grows, making it harder to understand and modify.
+- Deployment: Monolithic applications can be difficult to deploy as any change requires redeploying the entire application, which can lead to downtime and increased risk of errors.
+
+Advantages of Microservices Architecture:
+- Scalability: Microservices can be scaled independently, allowing for more efficient use of resources and better performance.
+- Flexibility: Microservices can be developed and deployed independently, allowing for faster development and easier maintenance.
+- Resilience: Microservices can be designed to be fault-tolerant, allowing for better availability and reliability.
+- Technology diversity: Microservices can be developed using different technologies and programming languages, allowing for more flexibility in choosing the right tools for each service.
+
+Disadvantages of Microservices Architecture:
+- Complexity: Microservices can be more complex to develop and deploy as they require managing multiple services and their interactions, which can lead to increased overhead and potential for errors.
+- Communication: Microservices require inter-service communication, which can introduce latency and increase the risk of failure if not designed properly.
+- Testing: Microservices can be more difficult to test as they require testing each service independently and also testing the interactions between services.
+
+In conclusion, both monolithic and microservices architectures have their advantages and disadvantages, and the choice between them depends on the specific needs and requirements of the application being developed. Monolithic architecture.
+
+Patterns:
+1. Strangler Fig: it is a pattern for gradually migrating a monolithic app to microservices
+eg: we have monolithic app with modules, we can start extracting modules one by one and convert into microservice, and test them in each step comparing with monolithic that produce same result or not. -> this called parallel run
+
+2. Branch by Abstraction: it is a pattern for developing new features in a microservices architecture without affecting the existing monolithic app
+eg: we can create an abstraction layer between the monolithic app and the new microservice, and then develop the new feature in the microservice while keeping the monolithic app intact. Once the new feature is ready, we can switch the abstraction layer to point to the new microservice, allowing for a seamless transition without affecting the existing functionality of the monolithic app.
+
+
+- In monolithic because we have single codebase and in which multiple modules, we can call functions of one module in another module but in microservices we call one service from another using Api calls over network, which produces latency.
+- we have json, xml, rpc, for communcation
+• JSON: it is lightweight but this produces more latency over network because text-serialized, has parsing overhead
+• RPC: it is faster than json because it is binary-serialized (eg: protobuf, thrift), but it is more complex to implement and maintain than json.
+famous RPC frameworks: gRPC, Apache Thrift, Apache Avro
+eg:
+message Person {
+  string name = 1;
+  int32 id = 2;
+  string email = 3;
+}
+
