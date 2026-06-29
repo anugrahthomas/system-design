@@ -1,0 +1,131 @@
+Distributed Systems:
+- A distributed system is a collection of independent computers that appear to the users of the system as a single computer.
+- Distributed systems are designed to achieve scalability, fault tolerance, and high availability by distributing the workload
+- Examples of distributed systems include cloud computing platforms, content delivery networks, and distributed databases.
+
+Advantages of Distributed Systems:
+- Scalability: Distributed systems can handle increased workloads by adding more machines to the system, allowing for better performance and resource utilization.
+- Fault Tolerance: Distributed systems can continue to operate even if some machines fail, as the workload can be redistributed among the remaining machines.
+- High Availability: Distributed systems can provide high availability by replicating data and services across multiple machines, ensuring that the system remains available even if some machines fail.
+
+in these kind of system, data must be synchronized and consistent across all machines/nodes
+- strong consistency: all nodes see the same data at the same time, achieved through consensus algorithms like Paxos and Raft
+eg: like we have 3 nodes, if we update data on one node, first node will send update to other 2 nodes, and wait for ack from nodes, once ack received from all nodes, then update started, but this increases latency and reduces availability
+- eventual consistency: all nodes will eventually see the same data, but there may be a delay in propagating updates across the system, achieved through techniques like replication and gossip protocols.
+eg: like we have 3 nodes, if we update data on one node, first node will send update to other 2 nodes, but it does not wait for ack from nodes, so update started immediately, but this cause temporary inconsistency but eventually all nodes will have same data.
+
+
+
+- Functional Requirements: it defines what the system should do, it describes the functionality of the system, such as features, use cases, and user interactions.
+eg: for a social media platform, functional requirements may include user registration, posting updates, liking and commenting on posts, and following other users.
+- Non-Functional Requirements: it defines how the system should perform, it describes the quality attributes of the system, such as performance, scalability, reliability, and security.
+eg: for a social media platform, non-functional requirements may include response time of less than 2 seconds, ability to handle 1 million concurrent users, 99.9% uptime, and secure user data.
+Non-functional requirements include:
+- Performance: it defines how fast the system should respond to user requests, it can be measured in terms of response time, throughput, and latency.
+- Scalability: it defines how well the system can handle increased workloads, it can be achieved through techniques like load balancing, caching, and partitioning.
+- Reliability: it defines how well the system can recover from failures, it can be achieved through techniques like replication, failover, and backup.
+- Security: it defines how well the system can protect against unauthorized access and data breaches, it can be achieved through techniques like encryption, authentication, and access control.
+- Availability: it defines how well the system can remain operational and accessible to users, it can be achieved through techniques like redundancy, failover, and disaster recovery.
+- Maintainability: it defines how easy it is to modify and update the system, it can be achieved through techniques like modular design, code documentation, and automated testing.
+- Usability: it defines how easy it is for users to interact with the system, it can be achieved through techniques like user interface design, user experience design, and accessibility.
+Note: SLA (Service Level Agreement) is a contract between a service provider and a customer that defines the level of service expected from the provider, it typically includes metrics for performance, availability, and support.
+
+Availability:
+- 99.9% uptime means system is down for 0.1% of the time, which is approximately 8.76 hours per year, best for systems like e-comm, social media, etc
+- 99.99% uptime means system is down for 0.01% of time, which is approximately 52.56 minutes per year, best for systems like online gaming, streaming services, etc
+- 99.999% uptime means system is down for 0.001% of time, which is approximately 5.26 minutes per year, best for systems like banking, healthcare, etc
+- 99.9999% uptime means system is down for 0.0001% of time, which is approximately 31.5 seconds per year, best for systems like aerospace, defense, etc
+
+Reliability:
+- Mean Time Between Failures (MTBF): it is the average time between failures of a system, it is calculated by dividing the total operating time by the number of failures.
+- Mean Time To Repair (MTTR): it is the average time it takes to repair a system after a failure, it is calculated by dividing the total downtime by the number of failures.
+- Availability can be calculated using the formula: Availability = MTBF / (MTBF + MTTR)
+- For example, if a system has an MTBF of 1000 hours and an MTTR of 10 hours, the availability would be: Availability = 1000 / (1000 + 10) = 0.9901 or 99.01% uptime.
+
+CAP Theorem:
+- The CAP theorem states that in a distributed system, it is impossible to simultaneously achieve Consistency, Availability, and Partition Tolerance.
+- Consistency: all nodes see the same data at the same time, achieved through consensus algorithms like Paxos and Raft
+- Availability: every request receives a response, without guarantee that it contains the most recent data, achieved through techniques like replication and load balancing
+- Partition Tolerance: the system continues to operate despite network partitions, achieved through techniques like replication and failover
+- we can achieve at most 2 of them, either CP, or AP, but not all three at the same time.
+Network partitions are inevitable
+So P is usually non-negotiable
+Therefore, the real trade-off is:
+Consistency vs Availability (when a partition occurs)
+
+1. CP (Consistency + Partition Tolerance)
+- Prioritizes correct data
+- May sacrifice availability (some requests fail)
+📌 Behavior:
+- If nodes cannot sync → system may reject requests
+📌 Examples:
+• HBase
+• MongoDB (in strict mode)
+• Zookeeper
+2. AP (Availability + Partition Tolerance)
+- Prioritizes always responding
+May return stale/inconsistent data
+📌 Behavior:
+- System continues serving requests even if nodes disagree
+📌 Examples:
+• Cassandra
+• DynamoDB
+• CouchDB
+3. CA (Consistency + Availability)
+- Works only when no partitions exist
+- Not realistic in distributed systems
+📌 Examples:
+• Traditional relational databases (single node)
+
+eg: Case: Network Partition occurs
+Option 1 (CP):
+System stops accepting orders
+Ensures no conflicting inventory data
+✔ Correct data
+❌ Poor user experience
+Option 2 (AP):
+System keeps accepting orders
+Inventory may become inconsistent
+✔ Always available
+❌ Risk of overselling
+
+Modern systems tune:
+• Strong consistency
+• Eventual consistency
+• Read/write quorum
+
+The CAP theorem only talks about what happens during a network partition. But most of the time, systems are running without partitions.
+That’s where the PACELC theorem comes in.
+📌 PACELC Meaning
+If there is a Partition (P), choose between Availability (A) and Consistency (C)
+Else (E), choose between Latency (L) and Consistency (C)
+
+1. During Partition (P)
+Same as CAP:
+Choose A or C
+2. Else (Normal Operation)
+You must choose:
+Low Latency (L) → faster responses
+Consistency (C) → accurate data
+⚖️ Example Trade-offs
+System 1: Banking System
+Prioritizes Consistency
+Even without partition, may delay response
+👉 PACELC: PC/EC
+
+System 2: Social Media Feed
+Prioritizes Low Latency
+May show slightly outdated data
+👉 PACELC: PA/EL
+
+
+
+Some Jargoans:
+1. Redundancy: having multiple copies of data or services to ensure availability and fault tolerance.
+2. Replication: copying data across multiple machines to ensure availability and fault tolerance.
+3. Reciliency: the ability of a system to recover from failures and continue operating.
+
+
+Stateless vs Stateful Systems:
+- Stateless Systems: do not maintain any state or information about previous interactions, each request is independent and can be processed without any knowledge of previous requests, examples include RESTful APIs and microservices.
+- Stateful Systems: maintain state or information about previous interactions, each request may depend on the previous requests, examples include databases and session management systems.
