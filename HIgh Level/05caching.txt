@@ -1,0 +1,48 @@
+Caching:
+- techique to store the results of expensive function or frequently used data in a temporary storage area (cache) for quick access
+- works on principle of locality: temporal (recently accessed data is likely to be accessed again) and spatial (data near recently accessed data is likely to be accessed soon)
+
+Types of Caching:
+1. Memory Caching: storing data in RAM for fast access
+2. Disk Caching: storing data on disk for larger storage capacity
+3. Web Caching: storing web resources (HTML, images) to reduce load times
+
+NOTE: cache are faster than db because chache is stored in memory whereas db on disk invloves I/O operations.
+
+FLOW:
+client -> server -> cache -> database
+
+Cache Eviction Policies: (when cache is full, decide which item to remove)
+1. LRU (Least Recently Used): evict the least recently accessed item
+2. LFU (Least Frequently Used): evict the least frequently accessed item
+3. FIFO (First In First Out): evict the oldest item in the cache
+4. Random: evict a random item from the cache
+5. TTL (Time To Live): evict items that have been in the cache for a certain amount of time
+6. MRU (Most Recently Used): evict the most recently accessed item (less common)
+
+Cache Invalidation: (when data in cache becomes stale, need to update or remove it)
+1. Write-through: update cache and database simultaneously, ensures cache is always up-to-date but can be slower due to database write latency
+2. Write-back: update cache first and write to database later, faster for writes but risk of data loss if cache fails before writing to database
+3. Cache-aside: application is responsible for updating cache and database, read from cache first, if cache miss, read from database and update cache, gives more control to application but can lead to stale data if not managed properly
+4. Write-around: write directly to database, bypassing cache, used when data is not frequently read, reduces cache pollution but can lead to slower writes and potential stale data in cache
+
+
+Cache Systems:
+1. Memcached: in-memory key-value store for small chunks of arbitrary data (strings, objects), used for caching database queries, API calls, etc.
+2. Redis: in-memory data structure store, supports various data structures (strings, hashes,lists, sets), used for caching, session management, real-time analytics, etc.
+3. Varnish: HTTP accelerator designed for caching web content, used to speed up delivery of web pages and reduce load on web servers, supports advanced caching rules and configurations
+
+Redis as Cache:
+- default redis is write-back cache, can configured
+- it is in-memory but persists data to disk, so it can recover
+- 
+
+
+
+
+
+System level Caching:
+L1, L2, L3 Caches:
+- L1 Cache: smallest and fastest, located on the CPU chip, used for storing frequently accessed data and instructions
+- L2 Cache: larger than L1, slower than L1, can be on the CPU chip or separate, used for storing data that is not as frequently accessed as L1
+- L3 Cache: largest and slowest, shared among multiple CPU cores, used for storing data that is accessed less frequently than L1 and L2
